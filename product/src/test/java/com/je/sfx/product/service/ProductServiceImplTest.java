@@ -16,7 +16,7 @@ import com.je.sfx.product.entity.Product;
 import com.je.sfx.product.exception.ProductNotFoundExpection;
 import com.je.sfx.product.repository.ProductRepository;
 
-public class ProductServiceImplTest {
+class ProductServiceImplTest {
 
 	@Mock
 	private ProductRepository productRepository;
@@ -25,7 +25,7 @@ public class ProductServiceImplTest {
 	private ProductServiceImpl impl;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 	}
 

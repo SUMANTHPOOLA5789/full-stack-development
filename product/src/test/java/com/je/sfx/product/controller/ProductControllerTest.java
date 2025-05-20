@@ -17,20 +17,24 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.je.sfx.product.dao.ProductDAO;
 import com.je.sfx.product.dto.ProductDTO;
-import com.je.sfx.product.entity.Product;
+import com.je.sfx.product.exception.GlobalExceptionHandler;
+import com.je.sfx.product.exception.ProductNotFoundExpection;
 
 @WebMvcTest(ProductController.class)
-public class ProductControllerTest {
+@Import(GlobalExceptionHandler.class)
+class ProductControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
 	
+	@SuppressWarnings("removal")
 	@MockBean
 	private ProductDAO productDAO;
 	
@@ -132,6 +136,19 @@ public class ProductControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message").value("Product deleted"))
 			.andExpect(jsonPath("$.data").value("Deleted ID: 1"));
+	}
+	
+	@Test
+	void testProductNotFoundException() throws Exception{
+		int invalidId = 999;
+		
+		when(productDAO.getById(invalidId)).thenThrow(new ProductNotFoundExpection(invalidId));
+		
+		mockMvc.perform(get("/api/products/{id}",invalidId))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.success").value(false))
+			.andExpect(jsonPath("$.message").value("Product not found with ID: "+invalidId))
+			.andExpect(jsonPath("$.data").doesNotExist());
 	}
 	
 }

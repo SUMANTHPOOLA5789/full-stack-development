@@ -1,11 +1,9 @@
 package com.je.sfx.product.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.je.sfx.product.dao.ProductDAO;
@@ -16,18 +14,18 @@ import com.je.sfx.product.repository.ProductRepository;
 
 @Service
 public class ProductServiceImpl implements ProductDAO{ 
+
+	private final ProductRepository repository;
 	
-	
-	
-	
-	@Autowired
-	private ProductRepository repository;
+	public ProductServiceImpl(ProductRepository repository) {
+		this.repository = repository;
+	}
 
 	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
 	@Override
 	public List<ProductDTO> getAll() {
-		return repository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+		return repository.findAll().stream().map(this::mapToDTO).toList();
 	}
 
 	@Override

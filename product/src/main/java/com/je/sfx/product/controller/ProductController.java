@@ -2,7 +2,6 @@ package com.je.sfx.product.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +25,11 @@ import jakarta.validation.Valid;
 @RequestMapping("api/products")
 public class ProductController {
 	
-	@Autowired
-	private ProductDAO productDAO;
+	private final ProductDAO productDAO;
+	
+	public ProductController(ProductDAO productDAO) {
+		this.productDAO = productDAO;
+	}
 	
 	private static final Logger log = LoggerFactory.getLogger(ProductController.class);
 
